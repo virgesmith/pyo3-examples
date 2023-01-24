@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "poetry-rust-integration"
+version = "0.1.0"
+description = "Example of a poetry project implemented in rust using maturin and pyo3"
+authors = ["Andrew Smith <andrew.smith@infogrid.io>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "poetry_rust_integration"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+
+[tool.poetry.group.dev.dependencies]
+maturin = "^0.14.10"
+pytest = "^7.2.1"
+
+#[tool.maturin]
+#python-source = "python"
+
+#[build-system]
+#requires = ["poetry-core"]
+#build-backend = "poetry.core.masonry.api"
+
+[build-system]
+requires = ["maturin>=0.14,<0.15"]
+build-backend = "maturin"
+

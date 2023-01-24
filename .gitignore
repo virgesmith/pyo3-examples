@@ -1,0 +1,5 @@
+/target
+/Cargo.lock
+__pycache__
+.tool-versions
+*.so

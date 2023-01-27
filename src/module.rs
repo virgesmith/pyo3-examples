@@ -2,6 +2,7 @@ use pyo3::prelude::*;
 
 use crate::fibonacci::*;
 use crate::collatz::Collatz;
+use crate::registry::Registry;
 
 /// A Python module implemented in Rust. The name of this function must match
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
@@ -12,6 +13,7 @@ fn poetry_rust_integration(_py: Python, m: &PyModule) -> PyResult<()> {
 
     m.add_class::<FibGenerator>()?;
     m.add_class::<Collatz>()?;
+    m.add_class::<Registry>()?;
 
     Ok(())
 }

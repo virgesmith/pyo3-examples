@@ -39,10 +39,9 @@ def test_control():
     c = Collatz(12)
     with pytest.raises(StopIteration):
         c.throw()
-    # TODO implement...
-    # with pytest.raises(RuntimeError):
-    #     c.throw(RuntimeError)
-    # for exception_type in [ValueError, IndexError, KeyError, RuntimeError, CustomException]:
-    #     with pytest.raises(exception_type) as e:
-    #         c.throw(exception_type, "testing 123")
-    #     assert "testing 123" in str(e.value)  # because KeyError puts quotes around the message
+    with pytest.raises(RuntimeError):
+        c.throw(RuntimeError)
+    for exception_type in [ValueError, IndexError, KeyError, RuntimeError, CustomException]:
+        with pytest.raises(exception_type) as e:
+            c.throw(exception_type, "testing 123")
+        assert "testing 123" in str(e.value)  # because KeyError puts quotes around the message

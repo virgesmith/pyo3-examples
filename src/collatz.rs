@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-// use pyo3::types::{PyType, PyString, PyAny}
+use pyo3::types::{PyType, PyAny};
 use pyo3::exceptions::PyStopIteration;
 
 #[pyclass]
@@ -45,17 +45,12 @@ impl Collatz {
         slf.at_end = true;
     }
 
-    // fn throw(_slf: PyRef<'_, Self>, e: PyType, msg: PyString, _traceback: PyAny) {
-    //     // TODO...
-    //     // - overloaded method
-    //     // - how to raise e(msg)
-    // }
-
-    #[pyo3(name = "throw")]
-    fn throw_default(_slf: PyRef<'_, Self>) -> PyResult<()> {
-        Err(PyStopIteration::new_err(""))
+    fn throw(_slf: PyRef<'_, Self>, error_type: Option<&PyType>, error_message: Option<&str>, _traceback: Option<&PyAny>) -> PyResult<()> {
+        match (error_type, error_message) {
+            (Some(e), Some(m)) => Err(PyErr::from_type(e, String::from(m))),
+            (Some(e), None) => Err(PyErr::from_type(e, "")),
+            _ => Err(PyStopIteration::new_err(""))
+        }
     }
-
-
 }
 

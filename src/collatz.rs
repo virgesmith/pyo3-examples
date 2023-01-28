@@ -21,19 +21,20 @@ impl Collatz {
     }
 
     fn __next__(mut slf: PyRefMut<'_, Self>) -> Option<u64> {
-        if slf.at_end {
-            return None;
+        match slf.at_end {
+            true => None,
+            _ => {
+                let ret = slf.n;
+                if slf.n <= 1 {
+                    slf.at_end = true;
+                }
+                match slf.n % 2 {
+                    0 => slf.n /= 2,
+                    _ => slf.n = 3 * slf.n + 1
+                }
+                Some(ret)
+            }
         }
-        let ret = slf.n;
-        if slf.n <= 1 {
-            slf.at_end = true;
-        }
-        if slf.n % 2 == 1 {
-            slf.n = 3 * slf.n + 1
-        } else {
-            slf.n /= 2
-        }
-        Some(ret)
     }
 
     fn send(mut slf: PyRefMut<'_, Self>, n: u64) -> Option<u64> {

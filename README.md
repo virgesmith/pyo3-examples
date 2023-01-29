@@ -42,7 +42,7 @@ maturin build
 - [X] generators
 - [X] __init_subclass__
 - [X] decorators
-- [ ] context managers (in progress...)
+- [X] context managers (less generic solution than C++)
 
 ## TODO
 

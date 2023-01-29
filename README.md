@@ -41,12 +41,14 @@ maturin build
 
 - [X] generators
 - [X] __init_subclass__
-- [ ] decorators
-- [ ] context managers
+- [X] decorators
+- [ ] context managers (in progress...)
 
 ## TODO
 
-```poetry build``` doesn't work, use `maturin develop` for now
+- ```poetry build``` doesn't work, using `maturin develop` for now
+- is it possible to use a function rather than a struct for the (inner) decorator?
+- how to capture (deferred) initialisation parameters as a closure and store in a struct?
 
 ## see also
 

@@ -26,6 +26,6 @@ impl Registry {
 
     #[classattr]
     fn list(py: Python) -> PyResult<&PyDict> {
-        Ok(REGISTRY.get_or_init(py,|| PyDict::new(py).into()).as_ref(py))
+        Ok(REGISTRY.get_or_init(py, || PyDict::new(py).into()).as_ref(py))
     }
 }

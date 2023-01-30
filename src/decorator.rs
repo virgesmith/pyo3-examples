@@ -1,51 +1,25 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyTuple, PyDict, PyCFunction};
-use std::time::{Instant};
+use std::time::Instant;
 
 
-// TODO get this to work?
-// #[pyfunction]
-// pub fn exectime2(py: Python, wraps: PyObject) -> PyResult<&PyCFunction> {
-//     let f = |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<_> {
-//         let now = Instant::now();
-//         let ret = wraps.call(py, args, kwargs)?;
-//         println!("elapsed (ms): {}", now.elapsed().as_millis());
-//         Ok(ret)
-//     };
-//     PyCFunction::new_closure(py, None, None, f)
-// }
-
-
-// Based on https://pyo3.rs/v0.18.0/class/call.html?highlight=decorator%20example#example-implementing-a-call-counter
-#[pyclass(name = "exectime")]
-pub struct ExecTime {
-    wraps: PyObject,
-}
-
-#[pymethods]
-impl ExecTime {
-    #[new]
-    fn __new__(wraps: PyObject) -> Self {
-        ExecTime {
-            wraps
+#[pyfunction]
+pub fn exectime(py: Python, wraps: PyObject) -> PyResult<&PyCFunction> {
+    PyCFunction::new_closure(
+        py, None, None,
+        move |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<PyObject> {
+            Python::with_gil(|py| {
+                let now = Instant::now();
+                let ret = wraps.call(py, args, kwargs);
+                println!("elapsed (ms): {}", now.elapsed().as_millis());
+                ret
+            })
         }
-    }
-
-    #[pyo3(signature = (*args, **kwargs))]
-    fn __call__(
-        &self,
-        py: Python<'_>,
-        args: &PyTuple,
-        kwargs: Option<&PyDict>,
-    ) -> PyResult<PyObject> {
-        let now = Instant::now();
-        let ret = self.wraps.call(py, args, kwargs)?;
-        println!("elapsed (ms): {}", now.elapsed().as_millis());
-        Ok(ret)
-    }
+    )
 }
 
-// parameterised decorator implemented as function + struct
+
+// parametrised decorator implemented as function + struct
 #[pyfunction]
 pub fn average_exectime(py: Python, n: usize) -> PyResult<&PyCFunction> {
     let f = move |args: &PyTuple, _kwargs: Option<&PyDict>| -> PyResult<_> {
@@ -55,39 +29,13 @@ pub fn average_exectime(py: Python, n: usize) -> PyResult<&PyCFunction> {
 }
 
 
-// Original struct-based implementation
-// #[pyclass(name = "average_exectime")]
-// pub struct AverageExecTime {
-//     n: usize
-// }
-
-
-// #[pymethods]
-// impl AverageExecTime {
-//     #[new]
-//     #[pyo3(signature = (*, n))]
-//     fn __new__(n: usize) -> Self {
-//         AverageExecTime {
-//             n
-//         }
-//     }
-
-//     fn __call__(
-//         &self,
-//         wraps: PyObject
-//     ) -> PyResult<AverageExecTimeInner> {
-//         Ok(AverageExecTimeInner::__new__(self.n, wraps))
-//     }
-// }
-
-
 #[pyclass]
 pub struct AverageExecTimeInner {
     n: usize,
     wraps: PyObject,
 }
 
-
+// Based on https://pyo3.rs/v0.18.0/class/call.html?highlight=decorator%20example#example-implementing-a-call-counter
 #[pymethods]
 impl AverageExecTimeInner {
     #[new]

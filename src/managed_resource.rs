@@ -16,14 +16,14 @@ impl Thing {
     Thing{i, j}
   }
 
-  fn do_the_thing(self: &Self) -> i32
+  fn do_the_thing(&self) -> i32
   {
     self.i * self.j
   }
 }
 
 impl Drop for Thing {
-  fn drop(self: &mut Self) {
+  fn drop(&mut self) {
     println!("destructing a Thing");
   }
 }

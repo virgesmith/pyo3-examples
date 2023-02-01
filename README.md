@@ -47,7 +47,6 @@ maturin build
 ## TODO
 
 - ```poetry build``` doesn't work, using `maturin develop` for now
-- is it possible to use a function rather than a struct for the (inner) decorator?
 - how to capture (deferred) initialisation parameters as a closure and store in a struct? with size known at compile time?
 
 ## see also

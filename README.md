@@ -2,7 +2,11 @@
 
 Example of a poetry project implemented in rust using maturin and pyo3.
 
-The aim is to replicate the functionality of the C++ equivalent [here](https://github.com/virgesmith/poetry-pybind11-integration).
+The aims are twofold:
+
+- replicate the functionality of the C++/pybind11 equivalent [here](https://github.com/virgesmith/poetry-pybind11-integration), and compare the ease of implementation
+- compare performance by implementing the some basic prime number generation and factorisation algorithms in python, C++ and rust.
+
 
 ## steps
 
@@ -39,10 +43,12 @@ maturin build
 
 ## feature completeness
 
-- [X] generators
-- [X] `__init_subclass__`
-- [X] decorators
-- [X] context managers (less generic solution than C++)
+When I say easier I mean easier **in the end** ;)
+
+- [X] generators. Ever so slightly easier than pybind11 thanks to `PyErr::from_type`.
+- [X] `__init_subclass__`. Was actually easier than in C++/pybind11, which requires a workaround for classmethods.
+- [X] decorators. Definitely more tricky, but got there in the end thanks to SO.
+- [X] context managers. A less generic solution than C++. Not sure how to generalise in rust, or what advantage it will gain.
 
 ## TODO
 

@@ -131,7 +131,7 @@ def prime_factors(n: int) -> list[int]:
             m /= p
             factors.append(p)
     if m > 1:
-        factors.append(m)
+        factors.append(int(m))
     return factors
 
 

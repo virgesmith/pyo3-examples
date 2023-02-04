@@ -50,6 +50,16 @@ When I say easier I mean easier **in the end** ;)
 - [X] decorators. Definitely more tricky, but got there in the end thanks to SO.
 - [X] context managers. A less generic solution than C++. Not sure how to generalise in rust, or what advantage it will gain.
 
+## performance comparison
+
+| function  | parameters | python | C++ | rust |
+|---------------|-----------------------|-------:|------:|-----:|
+| nth_prime     | 1 000 000             | 1422   |   147 | 67   |
+| prime_factors | 2 199 023 255 551     | 1723   |   204 | 71   |
+| PrimeRange    | [10^15, 10^15 + 1000) |        | 10341 | 4355 |
+
+times in milliseconds. I am genuinely surprised at how much faster the rust implementation is!
+
 ## TODO
 
 - ```poetry build``` doesn't work, using `maturin develop` for now

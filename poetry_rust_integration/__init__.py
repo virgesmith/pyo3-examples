@@ -7,6 +7,5 @@ def primes(cls: type):
     yield 2
     yield 3
     p = cls()
-    while True:
-        yield from p
+    yield from p
 

@@ -26,7 +26,6 @@ impl Sieve {
                 }
             }
         }
-
         Sieve{ state, index: 0 }
     }
 
@@ -48,16 +47,22 @@ impl Sieve {
 
 
 fn is_prime(n: usize, primes_below: &Vec::<usize>) -> bool {
-    for p in primes_below {
-        if n % p == 0 {
-            return false;
-        }
-        // only need to go as far as sqrt(n)
-        if p * p > n {
-            break;
+    match n {
+        0..=1 => false,
+        2..=3 => true,
+        _ => {
+            for p in primes_below {
+                if n % p == 0 {
+                    return false;
+                }
+                // only need to go as far as sqrt(n)
+                if p * p > n {
+                    break;
+                }
+            }
+            true
         }
     }
-    true
 }
 
 
@@ -125,7 +130,10 @@ impl PrimeGenerator {
 
 
 #[pyfunction]
-pub fn nth_prime(n: usize) -> usize {
+pub fn nth_prime(n: usize) -> PyResult<usize> {
+    if n == 0 {
+        return Err(PyValueError::new_err("n must be >0"));
+    }
     let mut found = Vec::with_capacity(n);
     found.push(2);
     found.push(3);
@@ -139,7 +147,7 @@ pub fn nth_prime(n: usize) -> usize {
             }
         }
     }
-    found[n-1]
+    Ok(found[n-1])
 }
 
 

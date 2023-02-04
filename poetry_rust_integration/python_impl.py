@@ -4,6 +4,8 @@ from math import sqrt
 
 
 def _is_prime(n: int, primes_below: list[int]) -> bool:
+    if n < 4:
+        return n in primes_below
     for p in primes_below:
         if n % p == 0:
             return False
@@ -11,6 +13,31 @@ def _is_prime(n: int, primes_below: list[int]) -> bool:
         if p * p > n:
             break
     return True
+
+def _seed_primes(n: int) -> list[int]:
+    primes = [2, 3]
+    c = primes[-1]
+    while True:
+        c += 2
+        if c * c > n:
+            break
+        if _is_prime(c, primes):
+            primes.append(c)
+    return primes
+
+
+def _extend_seed_primes(primes: list[int], n: int) -> list[int]:
+    ext_primes = []
+    c = primes[-1]
+    while True:
+        c += 2
+        if c * c > n:
+            break
+        if _is_prime(c, primes) and _is_prime(c, ext_primes):
+            ext_primes.append(c)
+    return ext_primes
+
+
 
 
 def sieve(n: int) -> Generator[int, None, None]:
@@ -38,36 +65,37 @@ class PrimeGenerator:
                 self.found.append(n)
                 return n
 
+class PrimeRange:
+    def __init__(self, m: int, n: int):
+        self.index = m - 2 if m % 2 else m - 1
+        self.n = n
+        self.seed_primes = _seed_primes(n)
 
-def seed_primes(n: int) -> list[int]:
-    primes = [2, 3]
-    c = primes[-1]
-    while True:
-        c += 2
-        if c * c > n:
-            break
-        if _is_prime(c, primes):
-            primes.append(c)
-    return primes
+    def __iter__(self) -> PrimeGenerator:
+        return self
 
-
-def extend_seed_primes(primes: list[int], n: int) -> list[int]:
-    ext_primes = []
-    c = primes[-1]
-    while True:
-        c += 2
-        if c * c > n:
-            break
-        if _is_prime(c, primes) and _is_prime(c, ext_primes):
-            ext_primes.append(c)
-    return ext_primes
+    def __next__(self) -> int:
+        # while self.index <= self.n and not _is_prime(self.index, self.seed_primes):
+        #     self.index += 2
+        # ret = self.index
+        # self.index += 2
+        # if ret > self.n:
+        #     raise StopIteration()
+        # return ret
+        while True:
+            self.index += 2
+            if self.index > self.n:
+                raise StopIteration()
+            if _is_prime(self.index, self.seed_primes):
+                break
+        return self.index
 
 
 def is_prime(n: int) -> bool:
     m = 1000000
     if n < m:
-        return _is_prime(n, seed_primes(n))
-    primes = seed_primes(m)
+        return _is_prime(n, _seed_primes(n))
+    primes = _seed_primes(m)
     while True:
         for p in primes:
             if n % p == 0:
@@ -75,11 +103,13 @@ def is_prime(n: int) -> bool:
         if m > n:
             break
         m *= 10
-        primes = extend_seed_primes(primes, m)
+        primes = _extend_seed_primes(primes, m)
     return True
 
 
 def nth_prime(n: int) -> int:
+    if n < 1:
+        raise ValueError("n must be >0")
     found = [2, 3]
     while n > len(found):
         c = found[-1]
@@ -88,7 +118,7 @@ def nth_prime(n: int) -> int:
             if _is_prime(c, found):
                 found.append(c)
                 break
-    return found[-1]
+    return found[n-1]
 
 
 def prime_factors(n: int) -> list[int]:
@@ -96,7 +126,7 @@ def prime_factors(n: int) -> list[int]:
         raise ValueError("input must be >=1")
     factors = []
     m = n
-    for p in seed_primes(n):
+    for p in _seed_primes(n):
         while m % p == 0:
             m /= p
             factors.append(p)

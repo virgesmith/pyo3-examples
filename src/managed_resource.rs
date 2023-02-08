@@ -10,13 +10,9 @@ struct Thing {
   j: i32
 }
 
-impl Thing {
-  fn new(i: i32, j: i32) -> Self {
-    println!("constructed a Thing");
-    Thing{i, j}
-  }
 
-  fn do_the_thing(&self) -> i32
+impl Thing {
+  fn go(&self) -> i32
   {
     self.i * self.j
   }
@@ -29,16 +25,12 @@ impl Drop for Thing {
 }
 
 
-// TODO can this be done more generically?
-// - template?
-// - deferred init? a lambda doesn't seem viable for numerous reasons
+// TODO - is unsendable a problem?
 
-
-#[pyclass]
+#[pyclass(unsendable)]
 pub struct ManagedThing {
-  // Thing initialisation parameters
-  i: i32,
-  j: i32,
+  // deferred init params -> Thing
+  initialiser: Box<dyn Fn() -> Thing>,
   resource: Option<Thing>
 }
 
@@ -47,18 +39,18 @@ pub struct ManagedThing {
 impl ManagedThing {
   #[new]
   fn __new__(i: i32, j: i32) -> Self {
-    ManagedThing{i, j, resource: None}
+    ManagedThing{initialiser: Box::new(move || Thing{i, j}), resource: None}
   }
 
   fn __call__(&self) -> PyResult<i32> {
     match &self.resource {
-      Some(r) => Ok(r.do_the_thing()),
+      Some(r) => Ok(r.go()),
       _ => Err(PyReferenceError::new_err("cannot access managed resource outside context manager"))
     }
   }
 
   fn __enter__(mut slf: PyRefMut<'_, Self>) -> PyRefMut<'_, Self> {
-    slf.resource = Some(Thing::new(slf.i, slf.j));
+    slf.resource = Some((slf.initialiser)());
     slf
   }
 

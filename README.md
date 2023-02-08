@@ -48,15 +48,17 @@ When I say easier I mean easier **in the end** ;)
 - [X] generators. Ever so slightly easier than pybind11 thanks to `PyErr::from_type`.
 - [X] `__init_subclass__`. Was actually easier than in C++/pybind11, which requires a workaround for classmethods.
 - [X] decorators. Definitely more tricky, but got there in the end thanks to SO.
-- [X] context managers. A less generic solution than C++. Not sure how to generalise in rust, or what advantage it will gain.
+- [X] context managers. More boilerplate needed - in C++ I can just selectively expose template specialisations to python.
 
 ## performance comparison
 
-| function  | parameters | python | C++ | rust |
-|---------------|-----------------------|-------:|------:|-----:|
-| nth_prime     | 1 000 000             | 1422   |   147 | 67   |
-| prime_factors | 2 199 023 255 551     | 1723   |   204 | 71   |
-| PrimeRange    | [10^15, 10^15 + 1000) |        | 10341 | 4355 |
+| function  | parameters | python3.11 | C++ | rust |
+|---------------|-----------------------:|-----:|------:|------:|
+| nth_prime     |              1 000 000 | 1063 |   145 |    63 |
+| is_prime      | 10 000 000 000 000 061 |      |  5728 |  3191 |
+| prime_factors |      2 199 023 255 551 | 1253 |   160 |    69 |
+| prime_factors | 10 000 000 000 000 068 |      | 43413 | 17357 |
+| PrimeRange    |    10^15, 10^15 + 1000 |      |  9613 |  4237 |
 
 times in milliseconds. I am genuinely surprised at how much faster the rust implementation is!
 

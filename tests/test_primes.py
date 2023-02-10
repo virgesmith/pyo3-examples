@@ -3,8 +3,6 @@ from operator import mul
 import random
 import pytest
 
-
-
 from poetry_rust_integration import primes, python_impl
 import poetry_rust_integration as rust_impl
 modules = [rust_impl, python_impl]
@@ -14,6 +12,13 @@ try:
 except:
     pass
 
+
+def test_sieve():
+    p_py = list(python_impl.prime_sieve(1000))
+    p_rs = list(rust_impl.PrimeSieve(1000))
+    assert p_py == p_rs
+    for n in range(1000):
+        assert (n in p_py) == python_impl.is_prime(n)
 
 @pytest.mark.parametrize("module", modules)
 def test_prime_generator(module):

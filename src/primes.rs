@@ -2,70 +2,64 @@
 use pyo3::prelude::*;
 use pyo3::exceptions::PyValueError;
 
+use std::cmp::{min, max};
+
 
 #[pyclass]
-pub struct Sieve {
-    state: Vec<bool>,
+pub struct PrimeSieve {
+    primes: Vec<usize>,
     index: usize
 }
 
 
-#[pymethods]
-impl Sieve {
-    #[new]
-    fn new(n: usize) -> Self {
-        let mut state = vec![true; n];
-        state[0] = false;
-        state[1] = false;
+// O(n) memory required
+fn sieve0(n: usize) -> Vec<usize> {
+    let n = max(n, 4);
+    let mut state = vec![true; n];
+    state[0] = false; // not prime
+    state[1] = false; // not prime
+    state[2] = true; // not prime
+    state[3] = true; // not prime
 
-        let m = (n as f64).sqrt() as usize;
-        for i in 2..=m {
-            if state[i] {
-                for j in (i * i..n).step_by(i) {
-                    state[j] = false;
-                }
-            }
-        }
-        Sieve{ state, index: 0 }
-    }
-
-    fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
-        slf
-    }
-
-    fn __next__(mut slf: PyRefMut<'_, Self>) -> Option<usize> {
-        loop {
-            slf.index += 1;
-            if slf.index >= slf.state.len() {
-                return None;
-            } else if slf.state[slf.index] {
-                return Some(slf.index)
+    let m = (n as f64).sqrt() as usize;
+    for i in 2..=m {
+        if state[i] {
+            for j in (i * i..n).step_by(i) {
+                state[j] = false;
             }
         }
     }
+    state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| i).collect::<Vec<_>>()
 }
 
 
-fn is_prime(n: usize, primes_below: &Vec::<usize>) -> bool {
-    match n {
-        0..=1 => false,
-        2..=3 => true,
-        _ => {
-            for p in primes_below {
-                if n % p == 0 {
-                    return false;
-                }
-                // only need to go as far as sqrt(n)
-                if p * p > n {
-                    break;
-                }
+// returns all primes up to and including sqrt(n), using a segmented approach to reduce memory requirements
+fn sieve(n: usize) -> Vec<usize> {
+    let n = max(n, 4);
+    let m = (n as f64).sqrt() as usize;
+    let chunk_size = min(n, 1_000);
+    let mut primes = sieve0(chunk_size);
+    for m0 in (chunk_size..m).step_by(chunk_size) {
+        let m1 = min(m0 + chunk_size, m);
+        let mut state = vec![true; m1 - m0];
+        for p in &primes {
+            let s = match m0 % p {
+                0 => p * (m0 / p),
+                _ => p * (m0 / p + 1)
+            };
+            for i in (s..m1).step_by(*p) {
+                state[i - m0] = false;
             }
-            true
         }
+        primes.extend(
+            state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| m0 + i) //.collect::<Vec<_>>()
+        );
     }
+    primes
 }
 
 
+// brute force
 fn seed_primes(n: usize) -> Vec<usize> {
     let mut primes = vec![2, 3];
     let mut c = *primes.last().unwrap();
@@ -95,6 +89,47 @@ fn extend_seed_primes(primes: &Vec<usize>, n: usize) -> Vec<usize> {
         }
     }
     ext_primes
+}
+
+
+#[pymethods]
+impl PrimeSieve {
+    #[new]
+    fn new(n: usize) -> Self {
+        PrimeSieve{ primes: sieve(n), index: 0 }
+    }
+
+    fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+        slf
+    }
+
+    fn __next__(mut slf: PyRefMut<'_, Self>) -> Option<usize> {
+        slf.index += 1;
+        match slf.index {
+            i if i <= slf.primes.len() => Some(slf.primes[i - 1]),
+            _ => None
+        }
+    }
+}
+
+
+fn is_prime(n: usize, primes_below: &Vec::<usize>) -> bool {
+    match n {
+        0..=1 => false,
+        2..=3 => true,
+        _ => {
+            for p in primes_below {
+                if n % p == 0 {
+                    return false;
+                }
+                // only need to go as far as sqrt(n)
+                if p * p > n {
+                    break;
+                }
+            }
+            true
+        }
+    }
 }
 
 
@@ -163,6 +198,7 @@ pub struct PrimeRange {
 impl PrimeRange {
     #[new]
     fn new(m: usize, n: usize) -> Self {
+        // seed_primes is faster than sieve for larger n
         PrimeRange{ index: if m % 2 == 0 { m + 1 } else { m }, n, seed_primes: seed_primes(n)}
     }
 
@@ -186,6 +222,8 @@ impl PrimeRange {
 
 #[pyfunction(name="is_prime")]
 pub fn is_prime_py(n: usize) -> bool {
+    // is_prime(n, &sieve(max(n, 10))) is a lot slower!
+
     let mut m = 1000000;
     if n < m {
         return is_prime(n, &seed_primes(n))
@@ -225,3 +263,5 @@ pub fn prime_factors(n: usize) -> PyResult<Vec<usize>> {
     }
     Ok(factors)
 }
+
+

@@ -5,7 +5,7 @@ use crate::collatz::Collatz;
 use crate::registry::Registry;
 use crate::decorator::{exectime, average_exectime};
 use crate::managed_resource::ManagedThing;
-use crate::primes::{is_prime_py, nth_prime, prime_factors, PrimeGenerator, PrimeRange};
+use crate::primes::{is_prime_py, nth_prime, prime_factors, PrimeSieve, PrimeGenerator, PrimeRange};
 
 /// A Python module implemented in Rust. The name of this function must match
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
@@ -21,6 +21,7 @@ fn poetry_rust_integration(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Registry>()?;
     m.add_class::<ManagedThing>()?;
 
+    m.add_class::<PrimeSieve>()?;
     m.add_class::<PrimeGenerator>()?;
     m.add_class::<PrimeRange>()?;
 

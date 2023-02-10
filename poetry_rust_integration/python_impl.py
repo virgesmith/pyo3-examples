@@ -14,6 +14,7 @@ def _is_prime(n: int, primes_below: list[int]) -> bool:
             break
     return True
 
+
 def _seed_primes(n: int) -> list[int]:
     primes = [2, 3]
     c = primes[-1]
@@ -38,9 +39,7 @@ def _extend_seed_primes(primes: list[int], n: int) -> list[int]:
     return ext_primes
 
 
-
-
-def sieve(n: int) -> Generator[int, None, None]:
+def prime_sieve(n: int) -> Generator[int, None, None]:
     assert n > 1
     a = [False, False] + [True] * (n - 2)
     for i in range(2, int(sqrt(n)) + 1):
@@ -65,6 +64,7 @@ class PrimeGenerator:
                 self.found.append(n)
                 return n
 
+
 class PrimeRange:
     def __init__(self, m: int, n: int):
         self.index = m - 2 if m % 2 else m - 1
@@ -75,13 +75,6 @@ class PrimeRange:
         return self
 
     def __next__(self) -> int:
-        # while self.index <= self.n and not _is_prime(self.index, self.seed_primes):
-        #     self.index += 2
-        # ret = self.index
-        # self.index += 2
-        # if ret > self.n:
-        #     raise StopIteration()
-        # return ret
         while True:
             self.index += 2
             if self.index > self.n:
@@ -133,5 +126,3 @@ def prime_factors(n: int) -> list[int]:
     if m > 1:
         factors.append(int(m))
     return factors
-
-

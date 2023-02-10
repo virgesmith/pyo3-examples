@@ -18,8 +18,6 @@ fn sieve0(n: usize) -> Vec<usize> {
     let mut state = vec![true; n];
     state[0] = false; // not prime
     state[1] = false; // not prime
-    state[2] = true; // not prime
-    state[3] = true; // not prime
 
     let m = (n as f64).sqrt() as usize;
     for i in 2..=m {
@@ -37,7 +35,7 @@ fn sieve0(n: usize) -> Vec<usize> {
 fn sieve(n: usize) -> Vec<usize> {
     let n = max(n, 4);
     let m = (n as f64).sqrt() as usize;
-    let chunk_size = min(n, 1_000);
+    let chunk_size = min(n, 100_000_000); // ~800MB
     let mut primes = sieve0(chunk_size);
     for m0 in (chunk_size..m).step_by(chunk_size) {
         let m1 = min(m0 + chunk_size, m);
@@ -133,7 +131,6 @@ fn is_prime(n: usize, primes_below: &Vec::<usize>) -> bool {
 }
 
 
-
 #[pyclass]
 pub struct PrimeGenerator {
     found: Vec<usize>
@@ -199,7 +196,7 @@ impl PrimeRange {
     #[new]
     fn new(m: usize, n: usize) -> Self {
         // seed_primes is faster than sieve for larger n
-        PrimeRange{ index: if m % 2 == 0 { m + 1 } else { m }, n, seed_primes: seed_primes(n)}
+        PrimeRange{ index: if m % 2 == 0 { m + 1 } else { m }, n, seed_primes: sieve(n)}
     }
 
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
@@ -222,26 +219,26 @@ impl PrimeRange {
 
 #[pyfunction(name="is_prime")]
 pub fn is_prime_py(n: usize) -> bool {
-    // is_prime(n, &sieve(max(n, 10))) is a lot slower!
+    is_prime(n, &sieve(max(n, 10))) //is a lot slower!
 
-    let mut m = 1000000;
-    if n < m {
-        return is_prime(n, &seed_primes(n))
-    }
-    let mut primes = seed_primes(m);
-    loop {
-        for p in &primes {
-            if n % p == 0 {
-                return false;
-            }
-        }
-        if m > n {
-            break;
-        }
-        m *= 10;
-        primes = extend_seed_primes(&primes, m);
-    }
-    true
+    // let mut m = 1000000;
+    // if n < m {
+    //     return is_prime(n, &seed_primes(n))
+    // }
+    // let mut primes = seed_primes(m);
+    // loop {
+    //     for p in &primes {
+    //         if n % p == 0 {
+    //             return false;
+    //         }
+    //     }
+    //     if m > n {
+    //         break;
+    //     }
+    //     m *= 10;
+    //     primes = extend_seed_primes(&primes, m);
+    // }
+    // true
 }
 
 
@@ -252,7 +249,7 @@ pub fn prime_factors(n: usize) -> PyResult<Vec<usize>> {
     }
     let mut factors = vec![];
     let mut m = n;
-    for p in seed_primes(n) {
+    for p in sieve(n) {
         while m % p == 0 {
             m /= p;
             factors.push(p);

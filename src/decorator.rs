@@ -10,9 +10,8 @@ pub fn exectime(py: Python, wraps: PyObject) -> PyResult<&PyCFunction> {
         move |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<PyObject> {
             Python::with_gil(|py| {
                 let now = Instant::now();
-                let ret = wraps.call(py, args, kwargs);
-                println!("elapsed (ms): {}", now.elapsed().as_millis());
-                ret
+                let ret = wraps.call(py, args, kwargs)?;
+                Ok((now.elapsed().as_millis(), ret).into_py(py))
             })
         }
     )
@@ -32,8 +31,8 @@ pub fn average_exectime(py: Python, n: usize) -> PyResult<&PyCFunction> {
                     for _ in 0..n {
                         result = wraps.call(py, args, kwargs)?;
                     }
-                    println!("elapsed (ms): {}", now.elapsed().as_millis());
-                    Ok(result)
+                    // println!("elapsed (ms): {}", now.elapsed().as_millis());
+                    Ok((now.elapsed().as_millis(), result).into_py(py))
                 })
             };
             match PyCFunction::new_closure(py, None, None, g) {

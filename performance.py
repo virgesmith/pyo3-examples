@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Any, Callable, Generator
+import pandas as pd
+
 
 from poetry_rust_integration import primes, python_impl, exectime
 import poetry_rust_integration as rust_impl
@@ -23,26 +25,30 @@ def _do_gen(f: Generator, *args: Any) -> Any:
     return list(f(*args))
 
 
-def run(func: str, *args, generator: bool = False, fast_only=False) -> None:
+def run(result: pd.DataFrame, func: str, *args, generator: bool = False, fast_only=False) -> None:
   for m in fast_modules if fast_only else modules:
     f = getattr(m, func)
     print(m.__name__, func, args)
     if generator:
-      _do_gen(f, *args)
+      t, _ = _do_gen(f, *args)
     else:
-      _do(f, *args)
+      t, _ = _do(f, *args)
+    result.loc[(func, args), m.__name__] = t
 
 
 if __name__ == "__main__":
+  result = pd.DataFrame(columns=["function", "args"] + [m.__name__ for m in modules]).set_index(["function", "args"])
+
   # TODO sieve
 
-  run("nth_prime", 100_000)
+  run(result, "nth_prime", 100_000)
 
-  run("prime_factors", 2199023255551)
-  run("prime_factors", 10000000000000068, fast_only=True)
+  run(result, "prime_factors", 2199023255551)
+  run(result, "prime_factors", 10000000000000068, fast_only=True)
 
   m = 10 ** 15
-  run("PrimeRange", m, m + 1000, generator=True, fast_only=True)
+  run(result, "PrimeRange", m, m + 1000, generator=True, fast_only=True)
 
   n = 10_000_000_000_000_061
-  run("is_prime", n, generator=False, fast_only=True)
+  run(result, "is_prime", n, generator=False, fast_only=True)
+  print(result.reset_index().to_markdown())

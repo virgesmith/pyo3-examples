@@ -27,11 +27,11 @@ def throws() -> None:
     raise RuntimeError()
 
 
-def test_simple_cpp_decorator() -> None:
-    assert decorated_noargs() is None
-    assert decorated_posargs(1, 3.1)
-    assert decorated_kwargs(1, flag=True) == 6
-    assert decorated_kwargs(5) == 5
+def test_simple_rust_decorator() -> None:
+    assert decorated_noargs()[1] is None
+    assert decorated_posargs(1, 3.1)[1]
+    assert decorated_kwargs(1, flag=True)[1] == 6
+    assert decorated_kwargs(5)[1] == 5
     with pytest.raises(RuntimeError):
         pthrows()
 
@@ -53,12 +53,12 @@ def pthrows() -> None:
     raise RuntimeError()
 
 
-def test_parameterised_cpp_decorator() -> None:
-    assert pdecorated_noargs() is None
-    assert pdecorated_kwargs(2) == 3
+def test_parameterised_rust_decorator() -> None:
+    assert pdecorated_noargs()[1] is None
+    assert pdecorated_kwargs(2)[1] == 3
     with pytest.raises(RuntimeError):
         pthrows()
 
 if __name__ == "__main__":
-    test_simple_cpp_decorator()
-    test_parameterised_cpp_decorator()
+    test_simple_rust_decorator()
+    test_parameterised_rust_decorator()

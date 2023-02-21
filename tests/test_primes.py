@@ -14,14 +14,15 @@ except:
 modules = [python_impl] + fast_modules
 
 
-
 @pytest.mark.parametrize("module", fast_modules)
-def test_sieve(module):
+def test_sieve(module) -> None:
     p_py = list(python_impl.prime_sieve(1000))
     p = list(module.PrimeSieve(1000))
     assert p_py == p
     for n in range(1000):
         assert (n in p_py) == python_impl.is_prime(n)
+    *_, p = list(module.PrimeSieve(100_001_000))
+    assert p == 100_000_969
 
 
 @pytest.mark.parametrize("module", modules)

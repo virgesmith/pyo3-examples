@@ -3,6 +3,10 @@ from typing import Generator
 from math import sqrt
 
 
+def _isqrt(n: int) -> int:
+    return int(sqrt(n)) + 1
+
+
 def _is_prime(n: int, primes_below: list[int]) -> bool:
     if n < 4:
         return n in primes_below
@@ -42,7 +46,7 @@ def _extend_seed_primes(primes: list[int], n: int) -> list[int]:
 def prime_sieve(n: int) -> Generator[int, None, None]:
     assert n > 1
     a = [False, False] + [True] * (n - 2)
-    for i in range(2, int(sqrt(n)) + 1):
+    for i in range(2, _isqrt(n)):
         if a[i]:
             for j in range(i * i, n, i):
                 a[j] = False
@@ -126,3 +130,39 @@ def prime_factors(n: int) -> list[int]:
     if m > 1:
         factors.append(int(m))
     return factors
+
+
+# Calculates primes up to n using sieve. O(n) memory required
+def sieve0(n: int) -> Generator[int, None, None]:
+    n = max(n, 4)
+    state = [True] * n
+    state[0] = state[1] = False
+    m = _isqrt(n)
+    for i in range(2, m + 1):
+        if state[i]:
+            for j in range(i * i, n, i):
+                state[j] = False
+    yield from (i for i, p in enumerate(state) if p)
+
+
+def sieve(n: int) -> list[int]:
+    n = max(n, 4)
+    chunk_size = min(n, 100_000_000)
+    # getting far more than required for small n
+    primes = list(sieve0(chunk_size))
+    for n0 in range(chunk_size, n, chunk_size):
+        n1 = min(n0 + chunk_size, n)
+        m = _isqrt(n1)
+        state = [True] * (n1 - n0)
+        print(n0, n1, primes[-1], m)
+        for p in primes:
+            if p > m:
+                break
+            match n0 % p:
+                case 0: s = p * (n0 // p)
+                case _: s = p * (n0 // p + 1)
+            for i in range(s, n1, p):
+                state[i - n0] = False
+        primes.extend(n0 + i for i, p in enumerate(state) if p)
+    return primes
+

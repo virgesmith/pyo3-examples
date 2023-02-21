@@ -35,7 +35,7 @@ fn sieve0(n: usize) -> Vec<usize> {
 }
 
 
-// Calculates primes up to n using seqmented sieve.
+// Calculates primes up to n using segmented sieve.
 fn sieve(n: usize) -> Vec<usize> {
     let n = max(n, 4);
     let chunk_size = min(n, 100_000_000);
@@ -58,7 +58,7 @@ fn sieve(n: usize) -> Vec<usize> {
             }
         }
         primes.extend(
-            state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| n0 + i) //.collect::<Vec<_>>()
+            state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| n0 + i)
         );
     }
     primes

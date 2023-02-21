@@ -62,6 +62,15 @@ When I say easier I mean easier **in the end** ;)
 
 times in milliseconds. I am genuinely surprised at how much faster the rust implementation is!
 
+Update: after some performance improvements of the algorithms, speed is much improved and C++ has more than caught up:
+
+| function      | parameters                           |   rust |   python3.11 |   C++ |
+|:--------------|:-------------------------------------|-------:|-------------:|------:|
+| nth_prime     | (100000,)                            |     67 |         1033 |   136 |
+| prime_factors | (2199023255551,)                     |      9 |         1234 |     8 |
+| prime_factors | (10000000000000068,)                 |   1075 |          nan |  1071 |
+| PrimeRange    | (1000000000000000, 1000000000001000) |    805 |          nan |   523 |
+| is_prime      | (10000000000000061,)                 |   1119 |          nan |   849 |
 ## TODO
 
 - ```poetry build``` doesn't work, using `maturin develop` for now

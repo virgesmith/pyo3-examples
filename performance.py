@@ -37,7 +37,7 @@ def run(result: pd.DataFrame, func: str, *args, generator: bool = False, fast_on
 
 
 if __name__ == "__main__":
-  result = pd.DataFrame(columns=["function", "args"] + [m.__name__ for m in modules]).set_index(["function", "args"])
+  result = pd.DataFrame(columns=["function", "parameters"] + [m.__name__ for m in modules]).set_index(["function", "parameters"])
 
   # TODO sieve
 
@@ -51,4 +51,11 @@ if __name__ == "__main__":
 
   n = 10_000_000_000_000_061
   run(result, "is_prime", n, generator=False, fast_only=True)
-  print(result.reset_index().to_markdown())
+
+  colmap = {
+    "poetry_rust_integration": "rust",
+    "poetry_rust_integration.python_impl": "python3.11",
+    "poetry_pybind11_integration": "C++"
+  }
+
+  print(result.rename(columns=colmap).reset_index().to_markdown(index=False))

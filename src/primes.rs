@@ -44,7 +44,6 @@ fn sieve(n: usize) -> Vec<usize> {
     for n0 in (chunk_size..n).step_by(chunk_size) {
         let n1 = min(n0 + chunk_size, n);
         let m = isqrt(n1);
-        println!("have {} need {}", primes.last().unwrap(), m);
         let mut state = vec![true; n1 - n0];
         for p in &primes {
             if p > &m {

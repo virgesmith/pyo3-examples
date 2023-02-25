@@ -138,23 +138,18 @@ impl PrimeGenerator {
 
 #[pyfunction]
 pub fn nth_prime(n: usize) -> PyResult<usize> {
-    if n == 0 {
-        return Err(PyValueError::new_err("n must be >0"));
-    }
-    let mut found = Vec::with_capacity(n);
-    found.push(2);
-    found.push(3);
-    while n > found.len() {
-        let mut c = *found.last().unwrap();
-        loop {
-            c += 2;
-            if is_prime(c, &found) {
-                found.push(c);
-                break;
-            }
+    match n {
+        0 => Err(PyValueError::new_err("n must be >0")),
+        i if i < 6 => Ok(vec![2, 3, 5, 7, 11, 13][i-1]),
+        _ => {
+            // https://stackoverflow.com/questions/1042717/is-there-a-way-to-find-the-approximate-value-of-the-nth-prime
+            let m = match n {
+                n if n < 7022 => ((n as f64) * ((n as f64).ln() + (n as f64).ln().ln())) as usize,
+                _ =>             ((n as f64) * ((n as f64).ln() + (n as f64).ln().ln() - 0.9385)) as usize
+            };
+            Ok(sieve(m)[n-1])
         }
     }
-    Ok(found[n-1])
 }
 
 

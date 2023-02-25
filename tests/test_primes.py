@@ -51,6 +51,7 @@ def test_nth_prime(module):
     assert module.nth_prime(1_000) == 7919
     assert module.nth_prime(10_000) == 104729
     assert module.nth_prime(100_000) == 1299709
+    assert module.nth_prime(1_000_000) == 15485863
 
 
 @pytest.mark.parametrize("module", modules)

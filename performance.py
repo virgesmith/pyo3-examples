@@ -42,6 +42,7 @@ if __name__ == "__main__":
   # TODO sieve
 
   run(result, "nth_prime", 100_000)
+  run(result, "nth_prime", 1_000_000)
 
   run(result, "prime_factors", 2199023255551)
   run(result, "prime_factors", 10000000000000068, fast_only=True)

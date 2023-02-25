@@ -52,29 +52,21 @@ When I say easier I mean easier **in the end** ;)
 
 ## performance comparison
 
-| function  | parameters | python3.11 | C++ | rust |
-|---------------|-----------------------:|-----:|------:|------:|
-| nth_prime     |              1 000 000 | 1063 |   145 |    63 |
-| is_prime      | 10 000 000 000 000 061 |      |  5728 |  3191 |
-| prime_factors |      2 199 023 255 551 | 1253 |   160 |    69 |
-| prime_factors | 10 000 000 000 000 068 |      | 43413 | 17357 |
-| PrimeRange    |    10^15, 10^15 + 1000 |      |  9613 |  4237 |
-
-times in milliseconds. I am genuinely surprised at how much faster the rust implementation is!
-
-Update: after some performance improvements of the algorithms, speed is much improved and C++ has more than caught up:
+rust initially seemed faster but after some performance improvements of the algorithms (in all languages), overall speed is much improved and C++ has more than caught up. Here's the latest results, times are in milliseconds:
 
 | function      | parameters                           |   rust |   python3.11 |   C++ |
 |:--------------|:-------------------------------------|-------:|-------------:|------:|
-| nth_prime     | (100000,)                            |     67 |         1033 |   136 |
-| prime_factors | (2199023255551,)                     |      9 |         1234 |     8 |
-| prime_factors | (10000000000000068,)                 |   1075 |          nan |  1071 |
-| PrimeRange    | (1000000000000000, 1000000000001000) |    805 |          nan |   523 |
-| is_prime      | (10000000000000061,)                 |   1119 |          nan |   849 |
+| nth_prime     | (100000,)                            |      7 |          139 |     6 |
+| nth_prime     | (1000000,)                           |    145 |         2115 |    81 |
+| prime_factors | (2199023255551,)                     |      7 |         1231 |     7 |
+| prime_factors | (10000000000000068,)                 |   1074 |            - |   844 |
+| PrimeRange    | (1000000000000000, 1000000000001000) |    722 |            - |   533 |
+| is_prime      | (10000000000000061,)                 |   1072 |            - |   855 |
+
+
 ## TODO
 
 - ```poetry build``` doesn't work, using `maturin develop` for now
-- how to capture (deferred) initialisation parameters as a closure and store in a struct? with size known at compile time?
 
 ## see also
 

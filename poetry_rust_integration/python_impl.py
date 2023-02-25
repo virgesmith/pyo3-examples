@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Generator
-from math import sqrt
+from math import sqrt, log
 
 
 def _isqrt(n: int) -> int:
@@ -107,15 +107,15 @@ def is_prime(n: int) -> bool:
 def nth_prime(n: int) -> int:
     if n < 1:
         raise ValueError("n must be >0")
-    found = [2, 3]
-    while n > len(found):
-        c = found[-1]
-        while True:
-            c += 2
-            if _is_prime(c, found):
-                found.append(c)
-                break
-    return found[n-1]
+    if n < 6:
+        return [2, 3, 5, 7, 11, 13][n-1]
+    if n < 7022:
+        m = int(n * log(n) + n * log(log(n)))
+    else:
+        m = int(n * log(n) + n * (log(log(n)) - 0.9385))
+    p = sieve(m)
+    assert len(p) >= n, f"{n}: {m} ({len(p)}) {p[-1]}"
+    return p[n-1]
 
 
 def prime_factors(n: int) -> list[int]:
@@ -154,7 +154,6 @@ def sieve(n: int) -> list[int]:
         n1 = min(n0 + chunk_size, n)
         m = _isqrt(n1)
         state = [True] * (n1 - n0)
-        print(n0, n1, primes[-1], m)
         for p in primes:
             if p > m:
                 break
@@ -166,3 +165,6 @@ def sieve(n: int) -> list[int]:
         primes.extend(n0 + i for i, p in enumerate(state) if p)
     return primes
 
+if __name__ == "__main__":
+    for i in range(1, 8):
+        print(10**i, nth_prime(10**i))

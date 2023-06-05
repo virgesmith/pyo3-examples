@@ -32,7 +32,7 @@ def _seed_primes(n: int) -> list[int]:
 
 
 def _extend_seed_primes(primes: list[int], n: int) -> list[int]:
-    ext_primes = []
+    ext_primes: list[int] = []
     c = primes[-1]
     while True:
         c += 2
@@ -75,7 +75,7 @@ class PrimeRange:
         self.n = n
         self.seed_primes = _seed_primes(n)
 
-    def __iter__(self) -> PrimeGenerator:
+    def __iter__(self) -> PrimeRange:
         return self
 
     def __next__(self) -> int:
@@ -108,21 +108,21 @@ def nth_prime(n: int) -> int:
     if n < 1:
         raise ValueError("n must be >0")
     if n < 6:
-        return [2, 3, 5, 7, 11, 13][n-1]
+        return [2, 3, 5, 7, 11, 13][n - 1]
     if n < 7022:
         m = int(n * log(n) + n * log(log(n)))
     else:
         m = int(n * log(n) + n * (log(log(n)) - 0.9385))
     p = sieve(m)
     assert len(p) >= n, f"{n}: {m} ({len(p)}) {p[-1]}"
-    return p[n-1]
+    return p[n - 1]
 
 
 def prime_factors(n: int) -> list[int]:
     if n == 0:
         raise ValueError("input must be >=1")
     factors = []
-    m = n
+    m: float = n
     for p in _seed_primes(n):
         while m % p == 0:
             m /= p
@@ -158,12 +158,15 @@ def sieve(n: int) -> list[int]:
             if p > m:
                 break
             match n0 % p:
-                case 0: s = p * (n0 // p)
-                case _: s = p * (n0 // p + 1)
+                case 0:
+                    s = p * (n0 // p)
+                case _:
+                    s = p * (n0 // p + 1)
             for i in range(s, n1, p):
                 state[i - n0] = False
         primes.extend(n0 + i for i, p in enumerate(state) if p)
     return primes
+
 
 if __name__ == "__main__":
     for i in range(1, 8):

@@ -22,6 +22,7 @@ def decorated_kwargs(z: float, *, flag: bool = False) -> int:
     print(f"decorated_kwargs: {z} {flag}")
     return int(z) + (5 if flag else 0)
 
+
 @exectime
 def throws() -> None:
     raise RuntimeError()
@@ -48,6 +49,7 @@ def pdecorated_kwargs(z: float, *, flag: bool = False) -> int:
     print("in pdecorated_kwargs", z, flag)
     return 3
 
+
 @average_exectime(n=1)
 def pthrows() -> None:
     raise RuntimeError()
@@ -58,6 +60,7 @@ def test_parameterised_rust_decorator() -> None:
     assert pdecorated_kwargs(2)[1] == 3
     with pytest.raises(RuntimeError):
         pthrows()
+
 
 if __name__ == "__main__":
     test_simple_rust_decorator()

@@ -8,8 +8,8 @@ def test_fib_recursive() -> None:
     assert fib_recursive(3) == 2
     assert fib_recursive(4) == 3
 
-    for i in range(5,11):
-        assert fib_recursive(i) == fib_recursive(i-1) + fib_recursive(i-2)
+    for i in range(5, 11):
+        assert fib_recursive(i) == fib_recursive(i - 1) + fib_recursive(i - 2)
 
 
 def test_fibgenerator() -> None:
@@ -19,4 +19,3 @@ def test_fibgenerator() -> None:
     series = [next(fg) for _ in range(10)]
     assert series == [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
     assert next(fg) == 89
-

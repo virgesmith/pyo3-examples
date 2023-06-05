@@ -5,11 +5,13 @@ import pytest
 
 from poetry_rust_integration import primes, python_impl
 import poetry_rust_integration as rust_impl
+
 fast_modules = [rust_impl]
 try:
-    import poetry_pybind11_integration as cpp_impl
+    import poetry_pybind11_integration as cpp_impl  # type: ignore[import]
+
     fast_modules.append(cpp_impl)
-except:
+except ImportError:
     pass
 modules = [python_impl] + fast_modules
 
@@ -67,8 +69,8 @@ def test_is_prime(module):
     assert module.is_prime(7919)
     assert module.is_prime(104729)
     assert module.is_prime(1299709)
-    assert not module.is_prime(2 ** 30 - 1)
-    assert module.is_prime(2 ** 31 - 1)
+    assert not module.is_prime(2**30 - 1)
+    assert module.is_prime(2**31 - 1)
 
     p = list(module.PrimeRange(3, 1000))
     for n in range(3, 1000):
@@ -91,10 +93,10 @@ def test_prime_factors(module):
     assert module.prime_factors(6) == [2, 3]
 
     random.seed(19937)
-    numbers = random.choices(range(1000000), k = 100)
+    numbers = random.choices(range(1000000), k=100)
     for n in numbers:
         assert reduce(mul, module.prime_factors(n)) == n
 
-    numbers = random.choices(range(100000000, 101000000), k = 10)
+    numbers = random.choices(range(100000000, 101000000), k=10)
     for n in numbers:
         assert reduce(mul, module.prime_factors(n)) == n

@@ -9,9 +9,11 @@ pub fn exectime(py: Python, wraps: PyObject) -> PyResult<&PyCFunction> {
         py, None, None,
         move |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<PyObject> {
             Python::with_gil(|py| {
+                let metrics = PyDict::new(py);
                 let now = Instant::now();
-                let ret = wraps.call(py, args, kwargs)?;
-                Ok((now.elapsed().as_millis(), ret).into_py(py))
+                let result = wraps.call(py, args, kwargs)?;
+                metrics.set_item("elapsed_ms", now.elapsed().as_millis())?;
+                Ok((metrics, result).into_py(py))
             })
         }
     )
@@ -26,13 +28,18 @@ pub fn average_exectime(py: Python, n: usize) -> PyResult<&PyCFunction> {
             let wraps: PyObject = args.get_item(0)?.into();
             let g = move |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<PyObject> {
                 Python::with_gil(|py| {
-                    let now = Instant::now();
+                    let metrics = PyDict::new(py);
+                    let mut times = vec![];
                     let mut result: PyObject = py.None();
                     for _ in 0..n {
+                        let now = Instant::now();
                         result = wraps.call(py, args, kwargs)?;
+                        times.push(now.elapsed().as_millis());
                     }
-                    // println!("elapsed (ms): {}", now.elapsed().as_millis());
-                    Ok((now.elapsed().as_millis(), result).into_py(py))
+                    metrics.set_item("max_ms", times.iter().max())?;
+                    metrics.set_item("mean_ms", times.iter().sum::<u128>() as f64 / n as f64)?;
+                    metrics.set_item("min_ms", times.iter().min())?;
+                    Ok((metrics, result).into_py(py))
                 })
             };
             match PyCFunction::new_closure(py, None, None, g) {

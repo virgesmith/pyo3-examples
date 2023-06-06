@@ -29,7 +29,10 @@ def throws() -> None:
 
 
 def test_simple_rust_decorator() -> None:
-    assert decorated_noargs()[1] is None
+    metric, result = decorated_noargs()
+    assert isinstance(metric, dict) and "elapsed_ms" in metric
+    assert result is None
+
     assert decorated_posargs(1, 3.1)[1]
     assert decorated_kwargs(1, flag=True)[1] == 6
     assert decorated_kwargs(5)[1] == 5
@@ -56,7 +59,9 @@ def pthrows() -> None:
 
 
 def test_parameterised_rust_decorator() -> None:
-    assert pdecorated_noargs()[1] is None
+    metric, result = pdecorated_noargs()
+    assert isinstance(metric, dict) and all(k in metric.keys() for k in  ("max_ms", "mean_ms", "min_ms"))
+    assert result is None
     assert pdecorated_kwargs(2)[1] == 3
     with pytest.raises(RuntimeError):
         pthrows()

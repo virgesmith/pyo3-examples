@@ -24,7 +24,7 @@ pip install maturin pytest pandas pandas-stubs tabulate
 ## build
 
 ```sh
-maturin develop
+maturin develop --release
 ```
 
 ## test
@@ -33,7 +33,7 @@ maturin develop
 pytest
 ```
 
-or
+and
 
 ```sh
 python performance.py
@@ -44,7 +44,7 @@ to run performance tests.
 ## package
 
 ```sh
-maturin build
+maturin build --release
 ```
 
 ## feature completeness

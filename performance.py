@@ -37,7 +37,7 @@ def run(
             t, _ = _do_gen(f, *args)
         else:
             t, _ = _do(f, *args)
-        result.loc[(func, args), m.__name__] = t
+        result.loc[(func, args), m.__name__] = t["elapsed_ms"]
 
 
 if __name__ == "__main__":

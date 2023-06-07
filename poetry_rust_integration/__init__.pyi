@@ -162,12 +162,12 @@ class Registry:
 
 def average_exectime(
     *, n: int
-) -> typing.Callable[..., typing.Callable[..., tuple[float, typing.Any | None]]]:
+) -> typing.Callable[..., typing.Callable[..., tuple[dict[str, float], typing.Any | None]]]:
     """
     A parameterised decorator that averages execution time for a given number of repeats, implemented in rust
     """
 
-def exectime(arg0: function) -> typing.Callable[..., tuple[float, typing.Any | None]]:
+def exectime(arg0: function) -> typing.Callable[..., tuple[dict[str, float], typing.Any | None]]:
     """
     A simple decorator that times execution, implemented in rust
     """
@@ -183,7 +183,7 @@ def is_prime(n: int) -> bool:
 def nth_prime(n: int) -> int:
     pass
 
-def prime_factors(n: int) -> typing.List[int]:
+def prime_factors(n: int) -> list[int]:
     pass
 
 def primes(cls: type) -> typing.Generator[int, None, None]:

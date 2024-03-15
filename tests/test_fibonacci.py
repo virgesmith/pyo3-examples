@@ -1,4 +1,4 @@
-from poetry_rust_integration import FibGenerator, fib_recursive
+from pyo3_examples import FibGenerator, fib_recursive
 
 
 def test_fib_recursive() -> None:

@@ -1,10 +1,10 @@
 [package]
-name = "poetry-rust-integration"
+name = "pyo3-examples"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "poetry_rust_integration"
+name = "pyo3_examples"
 # "cdylib" is necessary to produce a shared library for Python to import from.
 crate-type = ["cdylib"]
 

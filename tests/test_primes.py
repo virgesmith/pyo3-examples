@@ -3,8 +3,8 @@ from operator import mul
 import random
 import pytest
 
-from poetry_rust_integration import primes, python_impl
-import poetry_rust_integration as rust_impl
+from pyo3_examples import primes, python_impl
+import pyo3_examples as rust_impl
 
 fast_modules = [rust_impl]
 try:

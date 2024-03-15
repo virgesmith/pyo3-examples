@@ -11,7 +11,7 @@ use crate::primes::{is_prime_py, nth_prime, prime_factors, PrimeSieve, PrimeGene
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
 /// import the module.
 #[pymodule]
-fn poetry_rust_integration(_py: Python, m: &PyModule) -> PyResult<()> {
+fn pyo3_examples(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(fib_recursive, m)?)?;
     m.add_function(wrap_pyfunction!(exectime, m)?)?;
     m.add_function(wrap_pyfunction!(average_exectime, m)?)?;

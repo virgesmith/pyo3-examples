@@ -1,5 +1,5 @@
 import pytest
-from poetry_rust_integration import ManagedThing
+from pyo3_examples import ManagedThing
 
 
 def test_context_manager():

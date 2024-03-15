@@ -1,4 +1,4 @@
-from poetry_rust_integration import Registry
+from pyo3_examples import Registry
 
 
 def test_registry() -> None:

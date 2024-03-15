@@ -1,6 +1,6 @@
 from time import sleep
 import pytest
-from poetry_rust_integration import exectime, average_exectime
+from pyo3_examples import exectime, average_exectime
 
 
 @exectime

@@ -1,6 +1,6 @@
 import pytest
 
-from poetry_rust_integration import Collatz
+from pyo3_examples import Collatz
 
 
 def count(gen):

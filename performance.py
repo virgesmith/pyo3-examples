@@ -3,8 +3,8 @@ from typing import Any, Callable
 import pandas as pd
 
 
-from poetry_rust_integration import python_impl, exectime
-import poetry_rust_integration as rust_impl
+from pyo3_examples import python_impl, exectime
+import pyo3_examples as rust_impl
 
 modules = [rust_impl, python_impl]
 fast_modules = [rust_impl]
@@ -60,8 +60,8 @@ if __name__ == "__main__":
     run(result, "is_prime", n, generator=False, fast_only=True)
 
     colmap = {
-        "poetry_rust_integration": "rust",
-        "poetry_rust_integration.python_impl": "python3.11",
+        "pyo3_examples": "rust",
+        "pyo3_examples.python_impl": "python3.11",
         "poetry_pybind11_integration": "C++",
     }
 

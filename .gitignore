@@ -5,5 +5,4 @@ __pycache__
 *.so
 
 .vscode/
-poetry.lock
 .venv*

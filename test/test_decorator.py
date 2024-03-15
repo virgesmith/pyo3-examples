@@ -1,6 +1,8 @@
 from time import sleep
+
 import pytest
-from pyo3_examples import exectime, average_exectime
+
+from pyo3_examples import average_exectime, exectime
 
 
 @exectime
@@ -60,7 +62,9 @@ def pthrows() -> None:
 
 def test_parameterised_rust_decorator() -> None:
     metric, result = pdecorated_noargs()
-    assert isinstance(metric, dict) and all(k in metric.keys() for k in  ("max_ms", "mean_ms", "min_ms"))
+    assert isinstance(metric, dict) and all(
+        k in metric.keys() for k in ("max_ms", "mean_ms", "min_ms")
+    )
     assert result is None
     assert pdecorated_kwargs(2)[1] == 3
     with pytest.raises(RuntimeError):

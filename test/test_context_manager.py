@@ -1,4 +1,5 @@
 import pytest
+
 from pyo3_examples import ManagedThing
 
 

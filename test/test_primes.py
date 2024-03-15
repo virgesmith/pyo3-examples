@@ -1,14 +1,15 @@
+import random
 from functools import reduce
 from operator import mul
-import random
+
 import pytest
 
-from pyo3_examples import primes, python_impl
 import pyo3_examples as rust_impl
+from pyo3_examples import primes, python_impl
 
 fast_modules = [rust_impl]
 try:
-    import poetry_pybind11_integration as cpp_impl  # type: ignore[import]
+    import pybind11_examples as cpp_impl  # type: ignore[import]
 
     fast_modules.append(cpp_impl)
 except ImportError:
@@ -69,8 +70,8 @@ def test_is_prime(module):
     assert module.is_prime(7919)
     assert module.is_prime(104729)
     assert module.is_prime(1299709)
-    assert not module.is_prime(2**30 - 1)
-    assert module.is_prime(2**31 - 1)
+    assert not module.is_prime(2 ** 30 - 1)
+    assert module.is_prime(2 ** 31 - 1)
 
     p = list(module.PrimeRange(3, 1000))
     for n in range(3, 1000):

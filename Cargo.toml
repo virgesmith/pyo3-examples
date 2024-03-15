@@ -4,15 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "pyo3_examples"
+name = "_pyo3_examples"
 # "cdylib" is necessary to produce a shared library for Python to import from.
 crate-type = ["cdylib"]
 
 [dependencies]
 
 [dependencies.pyo3]
-version = "0.18.0"
+version = "^0.20"
 # "extension-module" tells pyo3 we want to build an extension module (skips linking against libpython.so)
-# "abi3-py37" tells pyo3 (and maturin) to build using the stable ABI with minimum Python version 3.7
-features = ["extension-module", "abi3-py37"]
+# "abi3-py310" tells pyo3 (and maturin) to build using the stable ABI with minimum Python version 3.10
+features = ["extension-module", "abi3-py310"]
 

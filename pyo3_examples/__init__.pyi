@@ -1,14 +1,15 @@
 """
-        poetry rust integration example
+        pyo3-examples
         -----------------------
-        .. currentmodule:: poetry_rust_integration
+        .. currentmodule:: pyo3_example
         .. autosummary::
            :toctree: _generate
     """
 
-# copied from poetry-pybind11-integration and manually edited
+# copied from pybind11-integration and manually edited
 
 from __future__ import annotations
+
 import typing
 
 __all__ = [
@@ -162,12 +163,16 @@ class Registry:
 
 def average_exectime(
     *, n: int
-) -> typing.Callable[..., typing.Callable[..., tuple[dict[str, float], typing.Any | None]]]:
+) -> typing.Callable[
+    ..., typing.Callable[..., tuple[dict[str, float], typing.Any | None]]
+]:
     """
     A parameterised decorator that averages execution time for a given number of repeats, implemented in rust
     """
 
-def exectime(arg0: function) -> typing.Callable[..., tuple[dict[str, float], typing.Any | None]]:
+def exectime(
+    arg0: typing.Callable,
+) -> typing.Callable[..., tuple[dict[str, float], typing.Any | None]]:
     """
     A simple decorator that times execution, implemented in rust
     """

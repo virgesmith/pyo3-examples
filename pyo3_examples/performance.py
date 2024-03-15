@@ -9,7 +9,7 @@ import pyo3_examples as rust_impl
 modules = [rust_impl, python_impl]
 fast_modules = [rust_impl]
 try:
-    import poetry_pybind11_integration as cpp_impl  # type: ignore[import]
+    import pybind11_examples as cpp_impl  # type: ignore[import]
 
     modules.append(cpp_impl)
     fast_modules.append(cpp_impl)
@@ -40,7 +40,7 @@ def run(
         result.loc[(func, args), m.__name__] = t["elapsed_ms"]
 
 
-if __name__ == "__main__":
+def main():
     result = pd.DataFrame(
         columns=["function", "parameters"] + [m.__name__ for m in modules]
     ).set_index(["function", "parameters"])
@@ -62,7 +62,11 @@ if __name__ == "__main__":
     colmap = {
         "pyo3_examples": "rust",
         "pyo3_examples.python_impl": "python3.11",
-        "poetry_pybind11_integration": "C++",
+        "pybind11_examples": "C++",
     }
 
     print(result.rename(columns=colmap).reset_index().to_markdown(index=False))
+
+
+if __name__ == "__main__":
+    main()

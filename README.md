@@ -24,7 +24,7 @@ pytest
 Install [pybind11-examples](https://github.com/virgesmith/pybind11-examples) in the same env.
 
 ```sh
-python performance.py
+perf-test
 ```
 
 to run performance tests.
@@ -46,7 +46,7 @@ Compared to [pybind11-examples](https://github.com/virgesmith/pybind11-examples)
 - [ ] constants
 - [ ] enums
 - [ ] vectorised functions
-- [ ] type annotations
+- [X] type annotations (manually)
 
 ## performance comparison
 
@@ -60,7 +60,6 @@ rust initially seemed faster but after some performance improvements of the algo
 | prime_factors | (10000000000000068,)                 |   1074 |            - |   844 |
 | PrimeRange    | (1000000000000000, 1000000000001000) |    722 |            - |   533 |
 | is_prime      | (10000000000000061,)                 |   1072 |            - |   855 |
-
 
 ## see also
 

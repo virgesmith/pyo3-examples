@@ -1,6 +1,7 @@
 from __future__ import annotations
+
+from math import log, sqrt
 from typing import Generator
-from math import sqrt, log
 
 
 def _isqrt(n: int) -> int:
@@ -170,4 +171,4 @@ def sieve(n: int) -> list[int]:
 
 if __name__ == "__main__":
     for i in range(1, 8):
-        print(10**i, nth_prime(10**i))
+        print(10 ** i, nth_prime(10 ** i))

@@ -3,7 +3,7 @@ import pytest
 from pyo3_examples import ManagedThing
 
 
-def test_context_manager():
+def test_context_manager() -> None:
     with ManagedThing(6, 7) as resource:
         # this returns the result of an operation on the resource, not the resource itself
         x = resource()

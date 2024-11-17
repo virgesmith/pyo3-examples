@@ -6,6 +6,7 @@ use crate::registry::Registry;
 use crate::decorator::{exectime, average_exectime};
 use crate::managed_resource::ManagedThing;
 use crate::primes::{is_prime_py, nth_prime, prime_factors, PrimeSieve, PrimeGenerator, PrimeRange};
+use crate::enums::RustEnum;
 
 /// A Python module implemented in Rust. The name of this function must match
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
@@ -28,6 +29,9 @@ fn _pyo3_examples(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(is_prime_py, m)?)?;
     m.add_function(wrap_pyfunction!(nth_prime, m)?)?;
     m.add_function(wrap_pyfunction!(prime_factors, m)?)?;
+
+    // this exposes the enum but doesn't implement e.g. the name/value properties
+    m.add_class::<RustEnum>()?;
 
     Ok(())
 }

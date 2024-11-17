@@ -27,7 +27,7 @@ def decorated_kwargs(z: float, *, flag: bool = False) -> int:
 
 @exectime
 def throws() -> None:
-    raise RuntimeError()
+    raise RuntimeError
 
 
 def test_simple_rust_decorator() -> None:
@@ -57,14 +57,12 @@ def pdecorated_kwargs(z: float, *, flag: bool = False) -> int:
 
 @average_exectime(n=1)
 def pthrows() -> None:
-    raise RuntimeError()
+    raise RuntimeError
 
 
 def test_parameterised_rust_decorator() -> None:
     metric, result = pdecorated_noargs()
-    assert isinstance(metric, dict) and all(
-        k in metric.keys() for k in ("max_ms", "mean_ms", "min_ms")
-    )
+    assert isinstance(metric, dict) and all(k in metric for k in ("max_ms", "mean_ms", "min_ms"))
     assert result is None
     assert pdecorated_kwargs(2)[1] == 3
     with pytest.raises(RuntimeError):

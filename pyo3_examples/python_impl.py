@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from math import log, sqrt
-from typing import Generator
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 def _isqrt(n: int) -> int:
@@ -55,7 +58,7 @@ def prime_sieve(n: int) -> Generator[int, None, None]:
 
 
 class PrimeGenerator:
-    def __init__(self):
+    def __init__(self) -> None:
         self.found = [2, 3]
 
     def __iter__(self) -> PrimeGenerator:
@@ -71,7 +74,7 @@ class PrimeGenerator:
 
 
 class PrimeRange:
-    def __init__(self, m: int, n: int):
+    def __init__(self, m: int, n: int) -> None:
         self.index = m - 2 if m % 2 else m - 1
         self.n = n
         self.seed_primes = _seed_primes(n)
@@ -83,7 +86,7 @@ class PrimeRange:
         while True:
             self.index += 2
             if self.index > self.n:
-                raise StopIteration()
+                raise StopIteration
             if _is_prime(self.index, self.seed_primes):
                 break
         return self.index
@@ -110,10 +113,7 @@ def nth_prime(n: int) -> int:
         raise ValueError("n must be >0")
     if n < 6:
         return [2, 3, 5, 7, 11, 13][n - 1]
-    if n < 7022:
-        m = int(n * log(n) + n * log(log(n)))
-    else:
-        m = int(n * log(n) + n * (log(log(n)) - 0.9385))
+    m = int(n * log(n) + n * log(log(n))) if n < 7022 else int(n * log(n) + n * (log(log(n)) - 0.9385))
     p = sieve(m)
     assert len(p) >= n, f"{n}: {m} ({len(p)}) {p[-1]}"
     return p[n - 1]
@@ -171,4 +171,4 @@ def sieve(n: int) -> list[int]:
 
 if __name__ == "__main__":
     for i in range(1, 8):
-        print(10 ** i, nth_prime(10 ** i))
+        print(10**i, nth_prime(10**i))

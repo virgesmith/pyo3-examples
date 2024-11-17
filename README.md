@@ -52,14 +52,20 @@ Compared to [pybind11-examples](https://github.com/virgesmith/pybind11-examples)
 
 rust initially seemed faster but after some performance improvements of the algorithms (in all languages), overall speed is much improved and C++ has more than caught up. Here's the latest results, times are in milliseconds:
 
-| function      | parameters                           |   rust |   python3.11 |   C++ |
-|:--------------|:-------------------------------------|-------:|-------------:|------:|
-| nth_prime     | (100000,)                            |      7 |          139 |     6 |
-| nth_prime     | (1000000,)                           |    145 |         2115 |    81 |
-| prime_factors | (2199023255551,)                     |      7 |         1231 |     7 |
-| prime_factors | (10000000000000068,)                 |   1074 |            - |   844 |
-| PrimeRange    | (1000000000000000, 1000000000001000) |    722 |            - |   533 |
-| is_prime      | (10000000000000061,)                 |   1072 |            - |   855 |
+Updated results:
+
+| function      | parameters                           |   rust |   python |   C++ |
+|:--------------|:-------------------------------------|-------:|---------:|------:|
+| nth_prime     | (100000,)                            |      8 |       93 |     5 |
+| nth_prime     | (1000000,)                           |     87 |     1031 |    87 |
+| prime_factors | (2199023255551,)                     |      3 |      709 |     6 |
+| prime_factors | (10000000000000068,)                 |    769 |      nan |   578 |
+| PrimeRange    | (1000000000000000, 1000000000001000) |    322 |      nan |   290 |
+| is_prime      | (10000000000000061,)                 |    764 |      nan |   588 |
+
+rustc 1.76, py03 0.20.3
+g++ 11.4, pybind11 2.11.1
+cpython 3.12
 
 ## see also
 

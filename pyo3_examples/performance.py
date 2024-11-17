@@ -1,10 +1,14 @@
 from __future__ import annotations
-from typing import Any, Callable
+
+from typing import TYPE_CHECKING, Any
+
 import pandas as pd
 
-
-from pyo3_examples import python_impl, exectime
 import pyo3_examples as rust_impl
+from pyo3_examples import exectime, python_impl
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 modules = [rust_impl, python_impl]
 fast_modules = [rust_impl]
@@ -28,7 +32,11 @@ def _do_gen(f: Callable, *args: Any) -> Any:
 
 
 def run(
-    result: pd.DataFrame, func: str, *args, generator: bool = False, fast_only=False
+    result: pd.DataFrame,
+    func: str,
+    *args: Any,
+    generator: bool = False,
+    fast_only: bool = False,
 ) -> None:
     for m in fast_modules if fast_only else modules:
         f = getattr(m, func)
@@ -42,7 +50,7 @@ def run(
 
 def main():
     result = pd.DataFrame(
-        columns=["function", "parameters"] + [m.__name__ for m in modules]
+        columns=["function", "parameters"] + [m.__name__ for m in modules],
     ).set_index(["function", "parameters"])
 
     # TODO sieve
@@ -61,7 +69,7 @@ def main():
 
     colmap = {
         "pyo3_examples": "rust",
-        "pyo3_examples.python_impl": "python3.11",
+        "pyo3_examples.python_impl": "python",
         "pybind11_examples": "C++",
     }
 

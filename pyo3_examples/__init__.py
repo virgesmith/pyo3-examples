@@ -1,8 +1,9 @@
 import importlib.metadata
-from typing import Generator
-from _pyo3_examples import *
+from collections.abc import Generator
 
 __version__ = importlib.metadata.version("pyo3-examples")
+
+from _pyo3_examples import *
 
 
 def primes(cls: type) -> Generator[int, None, None]:

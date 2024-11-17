@@ -5,3 +5,4 @@ mod registry;
 mod decorator;
 mod managed_resource;
 mod primes;
+mod enums;

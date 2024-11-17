@@ -1,6 +1,7 @@
 import random
 from functools import reduce
 from operator import mul
+from types import ModuleType
 
 import pytest
 
@@ -14,11 +15,11 @@ try:
     fast_modules.append(cpp_impl)
 except ImportError:
     pass
-modules = [python_impl] + fast_modules
+modules = [python_impl, *fast_modules]
 
 
 @pytest.mark.parametrize("module", fast_modules)
-def test_sieve(module) -> None:
+def test_sieve(module: ModuleType) -> None:
     p_py = list(python_impl.prime_sieve(1000))
     p = list(module.PrimeSieve(1000))
     assert p_py == p
@@ -29,7 +30,7 @@ def test_sieve(module) -> None:
 
 
 @pytest.mark.parametrize("module", modules)
-def test_prime_generator(module):
+def test_prime_generator(module: ModuleType) -> None:
     p = primes(module.PrimeGenerator)
     assert next(p) == 2
     assert next(p) == 3
@@ -44,7 +45,7 @@ def test_prime_generator(module):
 
 
 @pytest.mark.parametrize("module", modules)
-def test_nth_prime(module):
+def test_nth_prime(module: ModuleType) -> None:
     with pytest.raises(ValueError):
         module.nth_prime(0)
     assert module.nth_prime(1) == 2
@@ -58,7 +59,7 @@ def test_nth_prime(module):
 
 
 @pytest.mark.parametrize("module", modules)
-def test_is_prime(module):
+def test_is_prime(module: ModuleType) -> None:
     assert not module.is_prime(0)
     assert not module.is_prime(1)
     assert module.is_prime(2)
@@ -70,8 +71,8 @@ def test_is_prime(module):
     assert module.is_prime(7919)
     assert module.is_prime(104729)
     assert module.is_prime(1299709)
-    assert not module.is_prime(2 ** 30 - 1)
-    assert module.is_prime(2 ** 31 - 1)
+    assert not module.is_prime(2**30 - 1)
+    assert module.is_prime(2**31 - 1)
 
     p = list(module.PrimeRange(3, 1000))
     for n in range(3, 1000):
@@ -83,8 +84,8 @@ def test_is_prime(module):
 
 
 @pytest.mark.parametrize("module", modules)
-def test_prime_factors(module):
-    with pytest.raises(ValueError):
+def test_prime_factors(module: ModuleType) -> None:
+    with pytest.raises(ValueError, match="input must be >=1"):
         module.prime_factors(0)
     assert module.prime_factors(1) == []
     assert module.prime_factors(2) == [2]

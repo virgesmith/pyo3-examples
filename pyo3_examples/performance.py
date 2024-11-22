@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 
 import pyo3_examples as rust_impl
-from pyo3_examples import exectime, python_impl
+from pyo3_examples import average_exectime, exectime, python_impl
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -21,12 +21,12 @@ except ImportError:
     pass
 
 
-@exectime
+@average_exectime(n=3)
 def _do(f: Callable, *args: Any) -> Any:
     return f(*args)
 
 
-@exectime
+@average_exectime(n=3)
 def _do_gen(f: Callable, *args: Any) -> Any:
     return list(f(*args))
 
@@ -45,7 +45,8 @@ def run(
             t, _ = _do_gen(f, *args)
         else:
             t, _ = _do(f, *args)
-        result.loc[(func, args), m.__name__] = t["elapsed_ms"]
+
+        result.loc[(func, args), m.__name__] = t["min_ms"]
 
 
 def main():
@@ -73,7 +74,7 @@ def main():
         "pybind11_examples": "C++",
     }
 
-    print(result.rename(columns=colmap).reset_index().to_markdown(index=False))
+    print(result.rename(columns=colmap).reset_index().to_markdown(index=False, floatfmt=".1f"))
 
 
 if __name__ == "__main__":

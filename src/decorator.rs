@@ -29,16 +29,16 @@ pub fn average_exectime(py: Python, n: usize) -> PyResult<&PyCFunction> {
             let g = move |args: &PyTuple, kwargs: Option<&PyDict>| -> PyResult<PyObject> {
                 Python::with_gil(|py| {
                     let metrics = PyDict::new(py);
-                    let mut times = vec![];
+                    let mut times: Vec<u128> = vec![];
                     let mut result: PyObject = py.None();
                     for _ in 0..n {
                         let now = Instant::now();
                         result = wraps.call(py, args, kwargs)?;
-                        times.push(now.elapsed().as_millis());
+                        times.push(now.elapsed().as_micros());
                     }
-                    metrics.set_item("max_ms", times.iter().max())?;
+                    metrics.set_item("max_ms", *times.iter().max().unwrap() as f64 / 1000.0)?;
                     metrics.set_item("mean_ms", times.iter().sum::<u128>() as f64 / n as f64)?;
-                    metrics.set_item("min_ms", times.iter().min())?;
+                    metrics.set_item("min_ms", *times.iter().min().unwrap() as f64 / 1000.0)?;
                     Ok((metrics, result).into_py(py))
                 })
             };

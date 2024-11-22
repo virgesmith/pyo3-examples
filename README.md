@@ -43,8 +43,7 @@ Compared to [pybind11-examples](https://github.com/virgesmith/pybind11-examples)
 - [X] `__init_subclass__`. Was actually easier than in C++/pybind11, which requires a workaround for classmethods.
 - [X] decorators. Definitely more tricky, but got there in the end thanks to SO.
 - [X] context managers. More boilerplate needed - in C++ I can just selectively expose template specialisations to python.
-- [ ] constants
-- [ ] enums
+- [X] enums
 - [ ] vectorised functions
 - [X] type annotations (manually)
 
@@ -52,19 +51,20 @@ Compared to [pybind11-examples](https://github.com/virgesmith/pybind11-examples)
 
 rust initially seemed faster but after some performance improvements of the algorithms (in all languages), overall speed is much improved and C++ has more than caught up. Here's the latest results, times are in milliseconds:
 
-Updated results:
+Updated results in ms (best of 3):
 
 | function      | parameters                           |   rust |   python |   C++ |
 |:--------------|:-------------------------------------|-------:|---------:|------:|
-| nth_prime     | (100000,)                            |      8 |       93 |     5 |
-| nth_prime     | (1000000,)                           |     87 |     1031 |    87 |
-| prime_factors | (2199023255551,)                     |      3 |      709 |     6 |
-| prime_factors | (10000000000000068,)                 |    769 |      nan |   578 |
-| PrimeRange    | (1000000000000000, 1000000000001000) |    322 |      nan |   290 |
-| is_prime      | (10000000000000061,)                 |    764 |      nan |   588 |
+| nth_prime     | (100000,)                            |    3.4 |     65.7 |   4.9 |
+| nth_prime     | (1000000,)                           |   51.8 |    964.3 |  54.5 |
+| prime_factors | (2199023255551,)                     |    3.8 |    763.4 |   4.7 |
+| prime_factors | (10000000000000068,)                 |  714.4 |          | 425.1 |
+| PrimeRange    | (1000000000000000, 1000000000001000) |  293.8 |          | 269.4 |
+| is_prime      | (10000000000000061,)                 |  722.2 |          | 430.8 |
 
-rustc 1.76, py03 0.20.3
-g++ 11.4, pybind11 2.11.1
+Tool versions:
+rustc 1.82.0, py03 0.20.3
+g++ 13.2.0, pybind11 2.11.1
 cpython 3.12
 
 ## see also

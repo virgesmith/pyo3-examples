@@ -10,7 +10,7 @@ from pyo3_examples import primes, python_impl
 
 fast_modules = [rust_impl]
 try:
-    import pybind11_examples as cpp_impl  # type: ignore[import]
+    import pybind11_examples as cpp_impl  # ty: ignore[unresolved-import]
 
     fast_modules.append(cpp_impl)
 except ImportError:

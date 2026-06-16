@@ -5,7 +5,7 @@ import pytest
 from pyo3_examples import Collatz
 
 
-def count(gen: Iterable) -> None:
+def count(gen: Iterable) -> int:
     return sum(1 for _ in gen)
 
 

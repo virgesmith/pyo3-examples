@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 
 import pyo3_examples as rust_impl
-from pyo3_examples import average_exectime, exectime, python_impl
+from pyo3_examples import average_exectime, python_impl
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 modules = [rust_impl, python_impl]
 fast_modules = [rust_impl]
 try:
-    import pybind11_examples as cpp_impl  # type: ignore[import]
+    import pybind11_examples as cpp_impl  # type: ignore[import]  # ty:ignore[unresolved-import]
 
     modules.append(cpp_impl)
     fast_modules.append(cpp_impl)

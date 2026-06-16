@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 
-#[pyclass]
-#[derive(Clone, Copy)]
+#[pyclass(eq, eq_int)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum RustEnum {
     ONE = 1,
     TWO = 2,

@@ -1,6 +1,8 @@
-# copied from pybind11-integration and manually edited
+# Type stub for the compiled `_pyo3_examples` extension module (Rust/pyo3).
+# Type checkers cannot introspect the compiled .so, so its public API is declared here.
 
 import typing
+from typing import Self
 
 __all__ = [
     "Collatz",
@@ -10,14 +12,18 @@ __all__ = [
     "PrimeRange",
     "PrimeSieve",
     "Registry",
+    "RustEnum",
     "average_exectime",
     "exectime",
     "fib_recursive",
     "is_prime",
     "nth_prime",
     "prime_factors",
-    "primes",
 ]
+
+class RustEnum:
+    ONE: RustEnum
+    TWO: RustEnum
 
 class Collatz:
     def __init__(self, n: int) -> None: ...
@@ -40,7 +46,7 @@ class FibGenerator:
 
 class ManagedThing:
     def __call__(self) -> int: ...
-    def __enter__(self) -> object: ...
+    def __enter__(self) -> Self: ...
     def __exit__(
         self,
         exc_type: object,
@@ -87,4 +93,3 @@ def fib_recursive(n: int) -> int: ...
 def is_prime(n: int) -> bool: ...
 def nth_prime(n: int) -> int: ...
 def prime_factors(n: int) -> list[int]: ...
-def primes(cls: type) -> typing.Generator[int, None, None]: ...

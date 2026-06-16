@@ -17,6 +17,7 @@ def test_enum():
     assert PyEnum.SEVEN != 7
     assert PyEnum.EIGHT != 8
 
+
 def test_enum_scope() -> None:
     # enum values dont pollute outer scope (like C++, unlike C enums)
     # export_values() pollutes outer scope

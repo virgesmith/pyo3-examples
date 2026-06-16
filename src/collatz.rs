@@ -46,10 +46,11 @@ impl Collatz {
         slf.at_end = true;
     }
 
-    fn throw(_slf: PyRef<'_, Self>, error_type: Option<&PyType>, error_message: Option<&str>, _traceback: Option<&PyAny>) -> PyResult<()> {
+    #[pyo3(signature = (error_type=None, error_message=None, _traceback=None))]
+    fn throw(_slf: PyRef<'_, Self>, error_type: Option<&Bound<'_, PyType>>, error_message: Option<&str>, _traceback: Option<&Bound<'_, PyAny>>) -> PyResult<()> {
         match (error_type, error_message) {
-            (Some(e), Some(m)) => Err(PyErr::from_type(e, String::from(m))),
-            (Some(e), None) => Err(PyErr::from_type(e, "")),
+            (Some(e), Some(m)) => Err(PyErr::from_type(e.clone(), String::from(m))),
+            (Some(e), None) => Err(PyErr::from_type(e.clone(), "")),
             _ => Err(PyStopIteration::new_err(""))
         }
     }

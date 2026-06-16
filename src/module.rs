@@ -12,7 +12,7 @@ use crate::enums::RustEnum;
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
 /// import the module.
 #[pymodule]
-fn _pyo3_examples(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _pyo3_examples(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(fib_recursive, m)?)?;
     m.add_function(wrap_pyfunction!(exectime, m)?)?;
     m.add_function(wrap_pyfunction!(average_exectime, m)?)?;

@@ -54,7 +54,7 @@ impl ManagedThing {
     slf
   }
 
-  fn __exit__(mut slf: PyRefMut<'_, Self>, _err_type: Option<&PyType>, _err_msg: Option<&PyString>, _traceback: Option<&PyAny>) -> PyResult<()> {
+  fn __exit__(mut slf: PyRefMut<'_, Self>, _err_type: Option<&Bound<'_, PyType>>, _err_msg: Option<&Bound<'_, PyString>>, _traceback: Option<&Bound<'_, PyAny>>) -> PyResult<()> {
     slf.resource = None;
     Ok(())
   }

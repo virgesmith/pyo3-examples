@@ -8,9 +8,9 @@ import pytest
 import pyo3_examples as rust_impl
 from pyo3_examples import primes, python_impl
 
-fast_modules = [rust_impl]
+fast_modules: list[ModuleType] = [rust_impl]
 try:
-    import pybind11_examples as cpp_impl  # ty: ignore[unresolved-import]
+    import pybind11_examples as cpp_impl
 
     fast_modules.append(cpp_impl)
 except ImportError:

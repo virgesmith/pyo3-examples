@@ -10,21 +10,25 @@ The aims are twofold:
 ## build
 
 ```sh
-pip install -e .[dev]
+uv sync
 ```
 
 ## test
 
 ```sh
-pytest
+uv run pytest
 ```
 
 ## compare
 
-Install [pybind11-examples](https://github.com/virgesmith/pybind11-examples) in the same env.
+(Optional) Install [pybind11-examples](https://github.com/virgesmith/pybind11-examples) in the same env if you cloned it:
+
+```
+uv add ../pybind11-examples
+```
 
 ```sh
-perf-test
+uv run perf-test
 ```
 
 to run performance tests.
@@ -51,21 +55,22 @@ Compared to [pybind11-examples](https://github.com/virgesmith/pybind11-examples)
 
 rust initially seemed faster but after some performance improvements of the algorithms (in all languages), overall speed is much improved and C++ has more than caught up. Here's the latest results, times are in milliseconds:
 
-Updated results in ms (best of 3):
+Updated results (average) in ms:
 
 | function      | parameters                           |   rust |   python |   C++ |
 |:--------------|:-------------------------------------|-------:|---------:|------:|
-| nth_prime     | (100000,)                            |    3.4 |     65.7 |   4.9 |
-| nth_prime     | (1000000,)                           |   51.8 |    964.3 |  54.5 |
-| prime_factors | (2199023255551,)                     |    3.8 |    763.4 |   4.7 |
-| prime_factors | (10000000000000068,)                 |  714.4 |          | 425.1 |
-| PrimeRange    | (1000000000000000, 1000000000001000) |  293.8 |          | 269.4 |
-| is_prime      | (10000000000000061,)                 |  722.2 |          | 430.8 |
+| nth_prime     | (100000,)                            |    3.4 |     55.3 |   4.0 |
+| nth_prime     | (1000000,)                           |   53.0 |    855.5 |  51.6 |
+| prime_factors | (2199023255551,)                     |    3.6 |    706.7 |   4.9 |
+| prime_factors | (10000000000000068,)                 |  709.5 |    nan   | 435.0 |
+| PrimeRange    | (1000000000000000, 1000000000001000) |  287.9 |    nan   | 252.2 |
+| is_prime      | (10000000000000061,)                 |  715.1 |    nan   | 427.6 |
+
 
 Tool versions:
-rustc 1.82.0, py03 0.20.3
-g++ 13.2.0, pybind11 2.11.1
-cpython 3.12
+- rustc 1.96.0 + pyo3 0.29.0
+- g++ 15.2.0 + pybind11 3.0.1
+- cpython 3.14
 
 ## see also
 

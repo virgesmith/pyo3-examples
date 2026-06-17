@@ -9,11 +9,12 @@ from pyo3_examples import average_exectime, python_impl
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from types import ModuleType
 
-modules = [rust_impl, python_impl]
-fast_modules = [rust_impl]
+modules: list[ModuleType] = [rust_impl, python_impl]
+fast_modules: list[ModuleType] = [rust_impl]
 try:
-    import pybind11_examples as cpp_impl  # type: ignore[import]  # ty:ignore[unresolved-import]
+    import pybind11_examples as cpp_impl
 
     modules.append(cpp_impl)
     fast_modules.append(cpp_impl)

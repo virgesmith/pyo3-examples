@@ -2,6 +2,12 @@
 requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
+[tool.maturin]
+# Mixed Rust/Python layout: the pure-Python package `pyo3_examples` lives at the
+# repo root and the compiled Rust extension is placed inside it as `_pyo3_examples`.
+python-source = "."
+module-name = "pyo3_examples._pyo3_examples"
+
 [project]
 name = "pyo3-examples"
 version = "0.1.1"
@@ -21,7 +27,8 @@ classifiers = [
 ]
 dependencies = [
   "pandas",
-  "tabulate"
+  "pybind11-examples",
+  "tabulate",
 ]
 
 [project.scripts]
@@ -53,3 +60,6 @@ line-length = 120
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401", "F403"]
+
+[tool.uv.sources]
+pybind11-examples = { path = "../pybind11-examples" }

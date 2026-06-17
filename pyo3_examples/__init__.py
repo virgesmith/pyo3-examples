@@ -3,7 +3,7 @@ from collections.abc import Generator
 
 __version__ = importlib.metadata.version("pyo3-examples")
 
-from _pyo3_examples import (
+from pyo3_examples._pyo3_examples import (
     Collatz,
     FibGenerator,
     ManagedThing,

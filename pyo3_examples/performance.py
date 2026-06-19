@@ -78,7 +78,7 @@ def main():
         "pybind11_examples": "C++",
     }
 
-    print(result.rename(columns=colmap).reset_index().to_markdown(index=False, floatfmt=".1f"))
+    print(result.fillna("").rename(columns=colmap).reset_index().to_markdown(index=False, floatfmt=".1f"))
 
 
 if __name__ == "__main__":

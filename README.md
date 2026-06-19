@@ -21,10 +21,10 @@ uv run pytest
 
 ## compare
 
-(Optional) Install [pybind11-examples](https://github.com/virgesmith/pybind11-examples) in the same env if you cloned it:
+(Optional) Clone [pybind11-examples](https://github.com/virgesmith/pybind11-examples) alongside this repo, then:
 
 ```
-uv add ../pybind11-examples
+uv sync --extra compare
 ```
 
 ```sh
@@ -32,12 +32,6 @@ uv run perf-test
 ```
 
 to run performance tests.
-
-## package
-
-```sh
-maturin build --release
-```
 
 ## feature completeness
 

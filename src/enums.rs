@@ -1,8 +1,8 @@
 use pyo3::prelude::*;
 
-#[pyclass(eq, eq_int)]
+#[pyclass(eq, eq_int, from_py_object)]
 #[derive(Clone, Copy, PartialEq)]
 pub enum RustEnum {
-    ONE = 1,
-    TWO = 2,
+    One = 1,
+    Two = 2,
 }

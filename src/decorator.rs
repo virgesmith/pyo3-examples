@@ -36,7 +36,7 @@ pub fn average_exectime(py: Python<'_>, n: usize) -> PyResult<Bound<'_, PyCFunct
                 times.push(now.elapsed().as_micros());
             }
             metrics.set_item("max_ms", *times.iter().max().unwrap() as f64 / 1000.0)?;
-            metrics.set_item("mean_ms", times.iter().sum::<u128>() as f64 / n as f64)?;
+            metrics.set_item("mean_ms", times.iter().sum::<u128>() as f64 / n as f64 / 1000.0)?;
             metrics.set_item("min_ms", *times.iter().min().unwrap() as f64 / 1000.0)?;
             Ok((metrics, result).into_pyobject(py)?.into_any().unbind())
         };

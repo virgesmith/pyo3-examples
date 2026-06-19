@@ -22,8 +22,8 @@ __all__ = [
 ]
 
 class RustEnum:
-    ONE: RustEnum
-    TWO: RustEnum
+    One: RustEnum
+    Two: RustEnum
 
 class Collatz:
     def __init__(self, n: int) -> None: ...

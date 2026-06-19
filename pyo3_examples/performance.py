@@ -66,6 +66,9 @@ def main():
     m = 10**15
     run(result, "PrimeRange", m, m + 1000, generator=True, fast_only=True)
 
+    m = 10**8
+    run(result, "PrimeSieve", m, generator=True, fast_only=True)
+
     n = 10_000_000_000_000_061
     run(result, "is_prime", n, generator=False, fast_only=True)
 

@@ -6,7 +6,7 @@ use std::cmp::{min, max};
 
 
 fn isqrt(n: usize) -> usize {
-    (n as f64).sqrt() as usize + 1
+    n.isqrt() + 1
 }
 
 #[pyclass]
@@ -31,7 +31,7 @@ fn sieve0(n: usize) -> Vec<usize> {
             }
         }
     }
-    state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| i).collect::<Vec<_>>()
+    state.iter().enumerate().filter(|&(_, &s)| s).map(|(i, _)| i).collect::<Vec<_>>()
 }
 
 
@@ -58,7 +58,7 @@ fn sieve(n: usize) -> Vec<usize> {
             }
         }
         primes.extend(
-            state.iter().enumerate().filter(|(_, &s)| s).map(|(i, _)| n0 + i)
+            state.iter().enumerate().filter(|&(_, &s)| s).map(|(i, _)| n0 + i)
         );
     }
     primes
@@ -92,7 +92,7 @@ fn is_prime(n: usize, primes_below: &Vec::<usize>) -> bool {
         2..=3 => true,
         _ => {
             for p in primes_below {
-                if n % p == 0 {
+                if n.is_multiple_of(*p) {
                     return false;
                 }
                 // only need to go as far as sqrt(n)
@@ -147,7 +147,10 @@ pub fn nth_prime(n: usize) -> PyResult<usize> {
                 n if n < 7022 => ((n as f64) * ((n as f64).ln() + (n as f64).ln().ln())) as usize,
                 _ =>             ((n as f64) * ((n as f64).ln() + (n as f64).ln().ln() - 0.9385)) as usize
             };
-            Ok(sieve(m)[n-1])
+            let primes = sieve(m);
+            primes.get(n - 1).copied().ok_or_else(|| {
+                PyValueError::new_err(format!("prime count estimate too low for n={n}"))
+            })
         }
     }
 }
@@ -165,7 +168,7 @@ pub struct PrimeRange {
 impl PrimeRange {
     #[new]
     fn new(m: usize, n: usize) -> Self {
-        PrimeRange{ index: if m % 2 == 0 { m + 1 } else { m }, n, seed_primes: sieve(isqrt(n))}
+        PrimeRange{ index: if m.is_multiple_of(2) { m + 1 } else { m }, n, seed_primes: sieve(isqrt(n))}
     }
 
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
@@ -200,7 +203,7 @@ pub fn prime_factors(n: usize) -> PyResult<Vec<usize>> {
     let mut factors = vec![];
     let mut m = n;
     for p in sieve(isqrt(n)) {
-        while m % p == 0 {
+        while m.is_multiple_of(p) {
             m /= p;
             factors.push(p);
         }

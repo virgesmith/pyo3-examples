@@ -39,7 +39,7 @@ def test_simple_rust_decorator() -> None:
     assert decorated_kwargs(1, flag=True)[1] == 6
     assert decorated_kwargs(5)[1] == 5
     with pytest.raises(RuntimeError):
-        pthrows()
+        throws()
 
 
 @average_exectime(n=4)

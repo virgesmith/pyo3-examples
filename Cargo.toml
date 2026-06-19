@@ -1,7 +1,7 @@
 [package]
 name = "pyo3-examples"
-version = "0.1.0"
-edition = "2021"
+version = "0.1.1"
+edition = "2024"
 
 [lib]
 name = "_pyo3_examples"
@@ -13,6 +13,6 @@ crate-type = ["cdylib"]
 [dependencies.pyo3]
 version = "^0.29"
 # "extension-module" tells pyo3 we want to build an extension module (skips linking against libpython.so)
-# "abi3-py310" tells pyo3 (and maturin) to build using the stable ABI with minimum Python version 3.10
+# "abi3-py312" tells pyo3 (and maturin) to build using the stable ABI with minimum Python version 3.12
 features = ["extension-module", "abi3-py312"]
 

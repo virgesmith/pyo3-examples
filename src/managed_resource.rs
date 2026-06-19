@@ -20,17 +20,18 @@ impl Thing {
 
 impl Drop for Thing {
   fn drop(&mut self) {
-    println!("destructing a Thing");
+    eprintln!("destructing a Thing");
   }
 }
 
 
-// TODO - is unsendable a problem?
-
-#[pyclass(unsendable)]
+// Holding the deferred init params (rather than a `Box<dyn Fn>` closure) keeps the
+// type `Send`, so no `unsendable` is required.
+#[pyclass]
 pub struct ManagedThing {
   // deferred init params -> Thing
-  initialiser: Box<dyn Fn() -> Thing>,
+  i: i32,
+  j: i32,
   resource: Option<Thing>
 }
 
@@ -39,7 +40,7 @@ pub struct ManagedThing {
 impl ManagedThing {
   #[new]
   fn __new__(i: i32, j: i32) -> Self {
-    ManagedThing{initialiser: Box::new(move || Thing{i, j}), resource: None}
+    ManagedThing{i, j, resource: None}
   }
 
   fn __call__(&self) -> PyResult<i32> {
@@ -50,7 +51,7 @@ impl ManagedThing {
   }
 
   fn __enter__(mut slf: PyRefMut<'_, Self>) -> PyRefMut<'_, Self> {
-    slf.resource = Some((slf.initialiser)());
+    slf.resource = Some(Thing{ i: slf.i, j: slf.j });
     slf
   }
 
